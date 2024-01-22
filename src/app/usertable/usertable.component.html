@@ -1,6 +1,6 @@
 <div class="grid-container">
   <div class="mat-elevation-z8">
-    <table mat-table class="full-width-table" matSort aria-label="Elements">
+    <table mat-table [dataSource]="data" class="full-width-table" matSort aria-label="Elements">
       <!-- Id Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
@@ -8,23 +8,31 @@
       </ng-container>
 
       <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>email</th>
+        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="first_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>first_name</th>
+        <td mat-cell *matCellDef="let row">{{ row.first_name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="last_name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>last_name</th>
+        <td mat-cell *matCellDef="let row">{{ row.last_name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>avatar</th>
+        <td mat-cell *matCellDef="let row"><img loading="lazy" [src]="row.avatar" alt="" srcset=""></td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <mat-paginator
-      #paginator
-      [length]="dataSource.data.length"
-      [pageIndex]="0"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 20]"
-      aria-label="Select page"
-    >
-    </mat-paginator>
+    <mat-paginator [length]="resultsLength" [pageSize]="per_page" aria-label="Select page of GitHub search results"></mat-paginator>
+
   </div>
 </div>

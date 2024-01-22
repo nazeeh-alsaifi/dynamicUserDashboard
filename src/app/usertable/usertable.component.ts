@@ -2,7 +2,10 @@ import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatTableModule, MatTable } from '@angular/material/table';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSortModule, MatSort } from '@angular/material/sort';
-import { UsertableDataSource, UsertableItem } from './usertable-datasource';
+import { HttpClient } from '@angular/common/http';
+import { merge, Observable, of as observableOf } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-usertable',
@@ -12,17 +15,69 @@ import { UsertableDataSource, UsertableItem } from './usertable-datasource';
   imports: [MatTableModule, MatPaginatorModule, MatSortModule]
 })
 export class UsertableComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<UsertableItem>;
-  dataSource = new UsertableDataSource();
+  displayedColumns = ['id', 'email', 'first_name', 'last_name', 'avatar'];
+  userService!: UserService | null;
+  data: User[] = [];
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  resultsLength = 0;
+  per_page = 6;
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
 
-  ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.table.dataSource = this.dataSource;
+
+  constructor(private _httpClient: HttpClient) { }
+
+  ngAfterViewInit() {
+    this.userService = new UserService(this._httpClient);
+
+    merge(this.paginator.page)
+      .pipe(
+        startWith({}),
+        switchMap(() => {
+          return this.userService!.getUsers(
+            this.paginator.pageIndex,
+          ).pipe(catchError(() => observableOf(null)));
+        }),
+        map(data => {
+
+          if (data === null) {
+            return [];
+          }
+
+          this.resultsLength = data.total;
+          this.per_page = data.per_page;
+          return data.data;
+        }),
+      )
+      .subscribe(data => (this.data = data));
+  }
+
+}
+
+
+
+export interface User {
+  id: number,
+  email: String
+  first_name: String,
+  last_name: String,
+  avatar: String
+}
+export interface UsertableItem {
+  page: number,
+  data: any[],
+  total: number,
+  per_page: number,
+}
+
+
+export class UserService {
+  constructor(private _httpClient: HttpClient) { }
+
+  getUsers(page: number): Observable<UsertableItem> {
+    const href = 'https://reqres.in/api/users';
+    const requestUrl = `${href}?page=${page + 1}`;
+
+    return this._httpClient.get<UsertableItem>(requestUrl);
   }
 }
