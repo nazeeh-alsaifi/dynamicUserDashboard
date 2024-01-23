@@ -5,6 +5,8 @@ import { MatSortModule, MatSort } from '@angular/material/sort';
 import { HttpClient } from '@angular/common/http';
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { User, UserService } from '../user.service';
 
 
 @Component({
@@ -18,14 +20,13 @@ export class UsertableComponent implements AfterViewInit {
   displayedColumns = ['id', 'email', 'first_name', 'last_name', 'avatar'];
   userService!: UserService | null;
   data: User[] = [];
-
   resultsLength = 0;
   per_page = 6;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
 
-  constructor(private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient, private _router: Router) { }
 
   ngAfterViewInit() {
     this.userService = new UserService(this._httpClient);
@@ -39,7 +40,6 @@ export class UsertableComponent implements AfterViewInit {
           ).pipe(catchError(() => observableOf(null)));
         }),
         map(data => {
-
           if (data === null) {
             return [];
           }
@@ -52,32 +52,10 @@ export class UsertableComponent implements AfterViewInit {
       .subscribe(data => (this.data = data));
   }
 
-}
-
-
-
-export interface User {
-  id: number,
-  email: String
-  first_name: String,
-  last_name: String,
-  avatar: String
-}
-export interface UsertableItem {
-  page: number,
-  data: any[],
-  total: number,
-  per_page: number,
-}
-
-
-export class UserService {
-  constructor(private _httpClient: HttpClient) { }
-
-  getUsers(page: number): Observable<UsertableItem> {
-    const href = 'https://reqres.in/api/users';
-    const requestUrl = `${href}?page=${page + 1}`;
-
-    return this._httpClient.get<UsertableItem>(requestUrl);
+  goToUser(id: number) {
+    this._router.navigate(['/user', id]);
   }
+
 }
+
+
