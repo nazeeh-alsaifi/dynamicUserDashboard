@@ -1,11 +1,19 @@
 import { createActionGroup, props } from '@ngrx/store';
-import {  UserApiResponse, UsersApiResponse } from '../services/user.service';
 
 export const UsersApiActions = createActionGroup({
     source: 'Users API',
     events: {
-        'Retrieved Users List': props<{ users: UsersApiResponse }>(),
-        'Retrieved Single User': props<{ selectedUser: UserApiResponse }>()
+        'Load Users': props<{ page: number }>(),
+        'Load Users Success': props<{ data: any }>(),
+        'Load Users Failure': props<{ error: any }>()
     },
-}
-)
+})
+
+export const SingleUserApiActions = createActionGroup({
+    source: 'SingleUser API',
+    events: {
+        'Load User': props<{ id: number }>(),
+        'Load User Success': props<{ data: any }>(),
+        'Load User Failure': props<{ error: any }>()
+    },
+})

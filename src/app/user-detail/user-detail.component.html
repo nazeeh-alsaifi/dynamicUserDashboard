@@ -1,5 +1,4 @@
-@if (user) {
-<mat-card class="example-card">
+<mat-card *ngIf="user$ | async as user" class="example-card">
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title
@@ -11,8 +10,12 @@
   </mat-card-header>
   <mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button (click)="goBack()">BACK</button>
+      <a
+        mat-raised-button
+        routerLink="/users"
+        routerLinkActive="router-link-active"
+        >BACK</a
+      >
     </mat-card-actions>
   </mat-card-content>
 </mat-card>
-}

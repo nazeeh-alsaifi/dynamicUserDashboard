@@ -1,53 +1,41 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { MatTableModule, MatTable } from '@angular/material/table';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatSortModule, MatSort } from '@angular/material/sort';
-import { HttpClient } from '@angular/common/http';
-import { merge, Observable, of as observableOf } from 'rxjs';
-import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { User, UserService } from '../core/services/user.service';
+import { UsersApiActions } from '../core/actions/user.actions';
+import { Store } from '@ngrx/store';
 
+import * as UsersSelectors from "../core/selectors/user.selector";
+import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { User } from '../core/services/user.service';
 
 @Component({
   selector: 'app-usertable',
   templateUrl: './usertable.component.html',
   styleUrl: './usertable.component.css',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule, MatSortModule]
+  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatSortModule]
 })
-export class UsertableComponent implements AfterViewInit {
+export class UsertableComponent implements OnInit {
   displayedColumns = ['id', 'email', 'first_name', 'last_name', 'avatar'];
-  data: User[] = [];
-  resultsLength = 0;
+  public users$: Observable<User[]>;
+  resultsLength$: any = 0;
   per_page = 6;
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  page = 0;
 
 
-  constructor(private _httpClient: HttpClient, private _router: Router, private userService: UserService) { }
+  constructor(private _router: Router, private store: Store) {
+    this.store.dispatch(UsersApiActions.loadUsers({ page: this.page }));
 
-  ngAfterViewInit() {
-
-    merge(this.paginator.page)
-      .pipe(
-        startWith({}),
-        switchMap(() => {
-          return this.userService!.getUsers(
-            this.paginator.pageIndex,
-          ).pipe(catchError(() => observableOf(null)));
-        }),
-        map(data => {
-          if (data === null) {
-            return [];
-          }
-
-          this.resultsLength = data.total;
-          this.per_page = data.per_page;
-          return data.data;
-        }),
-      )
-      .subscribe(data => (this.data = data));
+  }
+  ngOnInit(): void {
+    this.users$ = this.store.select(UsersSelectors.getUsers);
+    this.resultsLength$ = this.store.select(UsersSelectors.getTotal);
+  }
+  pageNavigate(event: PageEvent) {
+    this.store.dispatch(UsersApiActions.loadUsers({ page: event.pageIndex }));
   }
 
   goToUser(id: number) {

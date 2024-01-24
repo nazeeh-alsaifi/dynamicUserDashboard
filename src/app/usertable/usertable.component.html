@@ -1,7 +1,7 @@
-  <div class="mat-elevation-z8">
+  <div class="mat-elevation-z8" *ngIf="users$ | async as users">
     <table
       mat-table
-      [dataSource]="data"
+      [dataSource]="users"
       class="full-width-table"
       matSort
       aria-label="Elements"
@@ -46,8 +46,9 @@
     </table>
 
     <mat-paginator
-      [length]="resultsLength"
+      [length]="resultsLength$ | async"
       [pageSize]="per_page"
+      (page)="pageNavigate($event)"
       aria-label="Select page of users search results"
     ></mat-paginator>
   </div>

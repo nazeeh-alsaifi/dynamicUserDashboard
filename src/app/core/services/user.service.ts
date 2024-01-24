@@ -1,8 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { UserState } from '../reducers/user.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +7,18 @@ import { UserState } from '../reducers/user.reducer';
 export class UserService {
   constructor(private _httpClient: HttpClient) { }
 
-  getUsers(page: number): Observable<UsersApiResponse> {
+  loadUsers(page: number) {
     const href = 'https://reqres.in/api/users';
     const requestUrl = `${href}?page=${page + 1}`;
 
-    return this._httpClient.get<UsersApiResponse>(requestUrl).pipe(map((userApiResponse => userApiResponse || [])));
+    return this._httpClient.get(requestUrl);
   }
 
-  getUser(id: number): Observable<UserApiResponse> {
+  loadUser(id: number) {
     const href = 'https://reqres.in/api/users';
     const requestUrl = `${href}/${id}`;
     // const user:User = this._httpClient.get<UserApiResponse>(requestUrl).subscribe(userWrapper => userWrapper.data);
-    return this._httpClient.get<UserApiResponse>(requestUrl).pipe(map((userWrapper => userWrapper || false)));
+    return this._httpClient.get(requestUrl);
   }
 }
 
@@ -38,9 +35,10 @@ export interface User {
 }
 export interface UsersApiResponse {
   page: number,
-  data: User[],
+  data: any[],
   total: number,
   per_page: number,
 }
+
 
 

@@ -1,34 +1,36 @@
-import { Component, inject } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { User, UserService } from '../core/services/user.service';
+import { User } from '../core/services/user.service';
+import { SingleUserApiActions } from '../core/actions/user.actions';
+import { Store } from '@ngrx/store';
+import * as UsersSelectors from "../core/selectors/user.selector";
+import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-user-detail',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, RouterModule,],
   templateUrl: './user-detail.component.html',
   styleUrl: './user-detail.component.css'
 })
 export class UserDetailComponent {
 
-  user!: User;
+  public user$: Observable<User>;
   selectedId = 0;
 
   constructor(private route: ActivatedRoute,
-    private router: Router,
-    private service: UserService) { }
-
-  ngOnInit() {
-
+    private store: Store) {
     this.route.paramMap.subscribe(params => this.selectedId = parseInt(params.get('id')!))
-    this.service.getUser(this.selectedId).subscribe(user => this.user = user.data);
+    this.store.dispatch(SingleUserApiActions.loadUser({ id: this.selectedId }));
+
   }
 
-  goBack() {
-    this.router.navigate(['/users'])
+  ngOnInit() {
+    this.user$ = this.store.select(UsersSelectors.getUser);
   }
 
 }
