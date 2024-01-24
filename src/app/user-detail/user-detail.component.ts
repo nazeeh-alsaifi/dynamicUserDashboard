@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { User, UserService } from '../user.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { User, UserService } from '../core/services/user.service';
 
 
 @Component({
@@ -25,7 +25,6 @@ export class UserDetailComponent {
 
     this.route.paramMap.subscribe(params => this.selectedId = parseInt(params.get('id')!))
     this.service.getUser(this.selectedId).subscribe(user => this.user = user.data);
-    console.log(this.user, this.selectedId);
   }
 
   goBack() {

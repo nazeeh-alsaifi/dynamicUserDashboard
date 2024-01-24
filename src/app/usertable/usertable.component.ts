@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { merge, Observable, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { User, UserService } from '../user.service';
+import { User, UserService } from '../core/services/user.service';
 
 
 @Component({
@@ -18,7 +18,6 @@ import { User, UserService } from '../user.service';
 })
 export class UsertableComponent implements AfterViewInit {
   displayedColumns = ['id', 'email', 'first_name', 'last_name', 'avatar'];
-  userService!: UserService | null;
   data: User[] = [];
   resultsLength = 0;
   per_page = 6;
@@ -26,10 +25,9 @@ export class UsertableComponent implements AfterViewInit {
   paginator!: MatPaginator;
 
 
-  constructor(private _httpClient: HttpClient, private _router: Router) { }
+  constructor(private _httpClient: HttpClient, private _router: Router, private userService: UserService) { }
 
   ngAfterViewInit() {
-    this.userService = new UserService(this._httpClient);
 
     merge(this.paginator.page)
       .pipe(
