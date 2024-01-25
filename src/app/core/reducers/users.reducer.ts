@@ -27,11 +27,11 @@ export const initialUserState: State = {
 export const userReducer = createReducer(
     initialUserState,
 
-    on(UsersApiActions.loadUsers, (state, { page }) => ({ ...state, loading: false, errors: null, page })),
+    on(UsersApiActions.loadUsers, (state, { page }) => ({ ...state, loading: true, errors: null, page })),
     on(UsersApiActions.loadUsersSuccess, (state, { data }) => ({
         ...state,
         users: data.data,
-        loading: true,
+        loading: false,
         total: data.total,
         error: null
     })),
@@ -42,14 +42,14 @@ export const userReducer = createReducer(
     on(SingleUserApiActions.loadUserSuccess, (state, { data }) => ({
         ...state,
         user: data.data,
-        loading: true,
+        loading: false,
         error: null
     })),
     on(SingleUserApiActions.loadUserFailure, (state, { error }) => ({ ...state, loading: true, errors: error })),
 
 
     on(SearchApiActions.searchUser, (state, { id }) => ({ ...state, loading: true, errors: null, id })),
-    on(SearchApiActions.searchUserSuccess, (state, { data }) => ({ ...state, loading: true, errors: null, users: [data.data] })),
+    on(SearchApiActions.searchUserSuccess, (state, { data }) => ({ ...state, loading: false, errors: null, users: [data.data] })),
     on(SearchApiActions.searchUserFailure, (state, { error }) => ({ ...state, loading: true, errors: error }))
 
 );

@@ -1,0 +1,9 @@
+.example-loading-shade {
+    min-height: 128px;
+    width: 128px;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

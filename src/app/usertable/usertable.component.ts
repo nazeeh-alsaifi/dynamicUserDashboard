@@ -5,18 +5,20 @@ import { MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { UsersApiActions } from '../core/actions/user.actions';
 import { Store } from '@ngrx/store';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import * as UsersSelectors from "../core/selectors/user.selector";
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { User } from '../core/services/user.service';
+import { ImageLoadingComponent } from '../image-loading/image-loading.component';
 
 @Component({
   selector: 'app-usertable',
   templateUrl: './usertable.component.html',
   styleUrl: './usertable.component.css',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatSortModule]
+  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule, ImageLoadingComponent]
 })
 export class UsertableComponent implements OnInit {
   displayedColumns = ['id', 'email', 'first_name', 'last_name', 'avatar'];
@@ -24,6 +26,7 @@ export class UsertableComponent implements OnInit {
   resultsLength$: any = 0;
   per_page = 6;
   page = 0;
+  isLoadingResults$: Observable<boolean> = this.store.select(UsersSelectors.loading);
 
 
   constructor(private _router: Router, private store: Store) {
@@ -41,6 +44,7 @@ export class UsertableComponent implements OnInit {
   goToUser(id: number) {
     this._router.navigate(['/user', id]);
   }
+
 
 }
 
