@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { UserService } from '../services/user.service';
-import { SingleUserApiActions, UsersApiActions } from '../actions/user.actions';
+import { SearchApiActions, SingleUserApiActions, UsersApiActions } from '../actions/user.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 
 @Injectable()
@@ -30,6 +30,19 @@ export class UserEffects {
         return this.userService.loadUser(action.id).pipe(
           map(data => SingleUserApiActions.loadUserSuccess({ data })),
           catchError(error => of(SingleUserApiActions.loadUserFailure({ error })))
+        );
+      })
+    )
+  )
+
+  searchUser$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(SearchApiActions.searchUser),
+      map((action: any) => action),
+      mergeMap((action:any) => {
+        return this.userService.loadUser(action.id).pipe(
+          map(data => SearchApiActions.searchUserSuccess({ data })),
+          catchError(error => of(SearchApiActions.searchUserFailure({ error })))
         );
       })
     )

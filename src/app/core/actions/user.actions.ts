@@ -17,3 +17,13 @@ export const SingleUserApiActions = createActionGroup({
         'Load User Failure': props<{ error: any }>()
     },
 })
+
+
+export const SearchApiActions = createActionGroup({
+    source: 'Search User API',
+    events: {
+        'Search User': props<{ id: number }>(),
+        'Search User Success': props<{ data: any }>(),
+        'Search User Failure': props<{ error: any }>()
+    },
+})

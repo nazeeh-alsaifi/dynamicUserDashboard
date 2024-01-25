@@ -1,6 +1,6 @@
 
 import { createReducer, on } from '@ngrx/store';
-import { SingleUserApiActions, UsersApiActions } from '../actions/user.actions';
+import { SingleUserApiActions, UsersApiActions, SearchApiActions } from '../actions/user.actions';
 
 export const usersFeatureKey = 'users'
 export interface State {
@@ -26,6 +26,7 @@ export const initialUserState: State = {
 
 export const userReducer = createReducer(
     initialUserState,
+
     on(UsersApiActions.loadUsers, (state, { page }) => ({ ...state, loading: false, errors: null, page })),
     on(UsersApiActions.loadUsersSuccess, (state, { data }) => ({
         ...state,
@@ -36,6 +37,7 @@ export const userReducer = createReducer(
     })),
     on(UsersApiActions.loadUsersFailure, (state, { error }) => ({ ...state, loading: false, error })),
 
+
     on(SingleUserApiActions.loadUser, (state, { id }) => ({ ...state, loading: true, errors: null, id })),
     on(SingleUserApiActions.loadUserSuccess, (state, { data }) => ({
         ...state,
@@ -43,6 +45,11 @@ export const userReducer = createReducer(
         loading: true,
         error: null
     })),
-    on(SingleUserApiActions.loadUserFailure, (state, { error }) => ({ ...state, loading: true, errors: error }))
+    on(SingleUserApiActions.loadUserFailure, (state, { error }) => ({ ...state, loading: true, errors: error })),
+
+
+    on(SearchApiActions.searchUser, (state, { id }) => ({ ...state, loading: true, errors: null, id })),
+    on(SearchApiActions.searchUserSuccess, (state, { data }) => ({ ...state, loading: true, errors: null, users: [data.data] })),
+    on(SearchApiActions.searchUserFailure, (state, { error }) => ({ ...state, loading: true, errors: error }))
 
 );

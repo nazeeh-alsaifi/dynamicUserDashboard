@@ -10,7 +10,7 @@
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       @for (item of menuItems; track item) {
-      <a mat-list-item [routerLink]=[item]>
+      <a mat-list-item [routerLink]="[item]">
         {{ item }}
       </a>
       }
@@ -28,7 +28,24 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       }
-      <span>dynamicUserDashboard</span>
+      <div>
+        <span>dynamicUserDashboard</span>
+      </div>
+      <div class="search-container">
+        <mat-form-field>
+          <mat-label>Search by id</mat-label>
+          <input
+            matInput
+            placeholder="any number > 0"
+            [formControl]="id"
+            (keyup)="search($event)"
+            required
+          />
+          @if (id.invalid) {
+          <mat-error>{{ getErrorMessage() }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

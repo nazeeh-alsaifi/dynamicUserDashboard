@@ -9,6 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { UserService, UsersApiResponse } from '../core/services/user.service';
+import { Store } from '@ngrx/store';
+import { SearchApiActions, SingleUserApiActions, UsersApiActions } from '../core/actions/user.actions';
 
 @Component({
   selector: 'app-nav',
@@ -23,11 +29,20 @@ import { RouterModule, RouterOutlet } from '@angular/router';
     MatIconModule,
     AsyncPipe,
     RouterOutlet,
-    RouterModule
+    RouterModule,
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatInputModule
   ]
 })
 export class NavComponent {
+  title = 'Dynamic User Dashboard';
+  menuItems = ['welcome', 'users'];
+  id = new FormControl('', [Validators.required, Validators.pattern("^[1-9]*$")]);
   private breakpointObserver = inject(BreakpointObserver);
+
+  constructor(private userService: UserService, private store: Store) { }
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -35,6 +50,29 @@ export class NavComponent {
       shareReplay()
     );
 
-  title = 'Dynamic User Dashboard';
-  menuItems = ['welcome', 'users'];
+
+  getErrorMessage() {
+    if (this.id.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return this.id.hasError('pattern') ? 'Not a valid number' : '';
+  }
+
+  search(event: Event) {
+    console.log(this.id.invalid);
+
+    if (!this.id.invalid) {
+      console.log((event.target as HTMLInputElement).value);
+      const searchId = parseInt((event.target as HTMLInputElement).value);
+      this.store.dispatch(SearchApiActions.searchUser({ id: searchId }));
+    }
+    this.store.dispatch(UsersApiActions.loadUsers({page: 0}));
+
+  }
+
+
+
+
 }
+

@@ -15,3 +15,9 @@
   top: 0;
   z-index: 1;
 }
+.search-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
