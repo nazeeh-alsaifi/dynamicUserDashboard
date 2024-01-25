@@ -66,8 +66,9 @@ export class NavComponent {
       console.log((event.target as HTMLInputElement).value);
       const searchId = parseInt((event.target as HTMLInputElement).value);
       this.store.dispatch(SearchApiActions.searchUser({ id: searchId }));
+    } else {
+      this.store.dispatch(UsersApiActions.loadUsers({ page: 0 }));
     }
-    this.store.dispatch(UsersApiActions.loadUsers({page: 0}));
 
   }
 
