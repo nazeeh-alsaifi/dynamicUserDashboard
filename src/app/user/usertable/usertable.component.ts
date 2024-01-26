@@ -3,15 +3,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { UsersApiActions } from '../core/actions/user.actions';
+import { UsersApiActions } from '../../core/actions/user.actions';
 import { Store } from '@ngrx/store';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import * as UsersSelectors from "../core/selectors/user.selector";
+import * as UsersSelectors from "../../core/selectors/user.selector";
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { User } from '../core/services/user.service';
-import { ImageLoadingComponent } from '../image-loading/image-loading.component';
+import { User } from '../../core/services/user.service';
+import { ImageLoadingComponent } from '../../components/image-loading/image-loading.component';
 
 @Component({
   selector: 'app-usertable',

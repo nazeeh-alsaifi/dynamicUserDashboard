@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { User } from '../core/services/user.service';
-import { SingleUserApiActions } from '../core/actions/user.actions';
+import { User } from '../../core/services/user.service';
+import { SingleUserApiActions } from '../../core/actions/user.actions';
 import { Store } from '@ngrx/store';
-import * as UsersSelectors from "../core/selectors/user.selector";
+import * as UsersSelectors from "../../core/selectors/user.selector";
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
