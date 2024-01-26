@@ -60,16 +60,11 @@ export class NavComponent {
   }
 
   search(event: Event) {
-    console.log(this.id.invalid);
-
-    if (!this.id.invalid) {
-      console.log((event.target as HTMLInputElement).value);
-      const searchId = parseInt((event.target as HTMLInputElement).value);
+    if (this.id.value === '' || this.id.valid) {
+      const searchId = parseInt((event.target as HTMLInputElement).value) || -1;
       this.store.dispatch(SearchApiActions.searchUser({ id: searchId }));
-    } else {
-      this.store.dispatch(UsersApiActions.loadUsers({ page: 0 }));
-    }
 
+    }
   }
 
 
