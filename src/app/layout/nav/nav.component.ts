@@ -12,9 +12,9 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
-import { UserService, UsersApiResponse } from '../core/services/user.service';
+import { UserService, UsersApiResponse } from '../../core/services/user.service';
 import { Store } from '@ngrx/store';
-import { SearchApiActions, SingleUserApiActions, UsersApiActions } from '../core/actions/user.actions';
+import { SearchApiActions, SingleUserApiActions, UsersApiActions } from '../../core/actions/user.actions';
 
 @Component({
   selector: 'app-nav',
